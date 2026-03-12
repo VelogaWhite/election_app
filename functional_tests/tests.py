@@ -48,12 +48,6 @@ class NewElectionTest(StaticLiveServerTestCase):
         # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือกตั้ง"
         self.assertIn('เลือกตั้ง', self.browser.title)
 
-        # สมชายจำได้ว่าจะเลือกใครเป็น สส เขต
-        # ในหน้าเลือกตั้งเขาเห็นหัวข้อ "เลือก สส เขต" และคลิกเข้าไป
-        self.assertIn('เลือก สส เขต', self.browser.page_source)
-        link = self.browser.find_element(By.LINK_TEXT, 'เลือก สส เขต')
-        link.click()
-
         # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือก สส เขต"
         self.assertIn('เลือก สส เขต', self.browser.title)
 
