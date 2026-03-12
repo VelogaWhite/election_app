@@ -7,13 +7,17 @@ import os
 
 MAX_WAIT = 10
 
-class NewVisitorTest(StaticLiveServerTestCase):
+class NewElectionTest(StaticLiveServerTestCase):
     
     def setUp(self):
         self.browser = webdriver.Chrome()
 
     def tearDown(self):
         self.browser.quit()
+
+    def logout(self):
+        self.browser.delete_all_cookies()
+
 
     def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
@@ -50,18 +54,28 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือก สส เขต"
         self.assertIn('เลือก สส เขต', self.browser.title)
 
-        # สมชายเห็น Dropdown 
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
-        self.assertEqual(
-            inputbox.get_attribute('placeholder'),
-            'Enter a to-do item'
-        )
+        # สมชายเห็นหน้า แล้วมีหัวข้อล็อกไว้ให้อยู่แล้วว่า เป็น "ราชบุรี เขต 1" ตรงกับข้อมูลที่เขาจำได้
+        self.assertIn('ราชบุรี เขต 1', self.browser.page_source)
 
-        # She types "Buy peacock feathers" into a text box (Edith's hobby
-        # is tying fly-fishing lures)
-        inputbox.send_keys('Buy peacock feathers')
+        # สมชายเห็น Dropdown ให้เลือกผู้สมัคร และเลือกผู้สมัครคนที่ 1
+        self.assertIn('เลือกผู้สมัคร', self.browser.page_source)
+        dropdown = self.browser.find_element(By.ID, 'id_candidate')  
+        dropdown.click()
+        option = dropdown.find_element(By.XPATH, "//option[@value='1']")
+        option.click()
 
-        # When she hits enter, the page updates, and now the page lists
-        # "1: Buy peacock feathers" as an item in a to-do list table
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy peacock feathers')
+        # สมชายเห็นปุ่ม "ยืนยันการเลือกตั้ง" และคลิกเข้าไป
+        self.assertIn('ยืนยันการเลือกตั้ง', self.browser.page_source)
+        button = self.browser.find_element(By.ID, 'id_confirm_button')
+        button.click()
+
+        # เมื่อเขากด ยันยัน ระบบได้แสดงหน้าว่า สมชายได้เลือกผู้สมัครคนที่ 1 ในเขต "ราชบุรี เขต 1" แล้วมีให้กดยืนยันอีกครั้ง
+        self.assertIn('คุณได้เลือกผู้สมัครคนที่ 1 ในเขต ราชบุรี เขต 1', self.browser.page_source)
+        confirm_button = self.browser.find_element(By.ID, 'id_final_confirm_button')
+        confirm_button.click()
+
+        # เมื่อกดยืนยันครั้งสุดท้ายแล้ว ระบบก็ได้แสดงหน้าว่า "เลือกตั้งสำเร็จ"
+        self.assertIn('เลือกตั้งสำเร็จ', self.browser.page_source)
+
+        # สมชายก็ได้ปิดแอบลงไป
+        self.logout()
