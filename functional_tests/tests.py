@@ -34,8 +34,11 @@ class NewElectionTest(StaticLiveServerTestCase):
 
     def test_can_elect(self):
         # เป็นวันเลือกตั้งแอพได้เปิดให้ user ใช้ Feature เลือกตั้งออนไลน์ได้
-        # สมชายจึงเปิดแอพขึ้นมา
+        # สมชายจึงเปิดแอพ election_app ขึ้นมา
         self.browser.get(self.live_server_url)
+
+        # สมชายเห็นแอพชื่อว่า 'election_app' เปิดขึ้นมา
+        self.assertIn('election_app', self.browser.title)
 
         # สมชายเจอหน้าแรกที่มีหัวข้อต่างๆ สมชายเห็นหัวข้อ "เลือกตั้ง" และคลิกเข้าไป
         self.assertIn('เลือกตั้ง', self.browser.page_source)

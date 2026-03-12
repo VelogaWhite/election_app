@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบเลือกตั้งออนไลน์</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>ระบบเลือกตั้งออนไลน์</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">หน้าแรก</a    ></li>
+                <li><a href="{% url 'vote' %}">ลงคะแนนเสียง</a></li>
+                <li><a href="{% url 'results' %}">ผลการเลือกตั้ง</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 ระบบเลือกตั้งออนไลน์</p>
+    </footer>
+</body>
+</html>
