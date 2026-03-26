@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve
 from election_app.views import home, vote, results
-from election_app.models import Election, Candidate 
+from election_app.models import Election, Candidate, Vote
 
 class HomePageTest(TestCase):
 
@@ -58,3 +58,32 @@ class VotePageTest(TestCase):
         
         # คาดหวังว่าจะมีปุ่มยืนยันครั้งสุดท้าย (id_final_confirm_button)
         self.assertContains(response, 'id_final_confirm_button')
+
+class ResultsPageTest(TestCase):
+
+    def setUp(self):
+        # จำลองข้อมูลตั้งต้น
+        self.election = Election.objects.create(name='ราชบุรี เขต 1', date='2026-03-12')
+        self.candidate = Candidate.objects.create(name='ผู้สมัครคนที่ 1', election=self.election)
+
+    def test_results_url_resolves_to_results_view(self):
+        # ตรวจสอบว่า url /results/ วิ่งไปที่ฟังก์ชัน results
+        found = resolve('/results/')
+        self.assertEqual(found.func, results)
+
+    def test_results_post_saves_vote_and_returns_correct_html(self):
+        # จำลองการส่งข้อมูล (กดปุ่มยืนยันครั้งสุดท้าย) โดยส่ง candidate_id ไปที่ /results/
+        response = self.client.post('/results/', data={'candidate_id': self.candidate.id})
+        
+        # คาดหวังว่าคะแนนโหวตจะถูกบันทึกลง Database (ต้องมี Vote โผล่มา 1 record)
+        self.assertEqual(Vote.objects.count(), 1)
+        
+        # ตรวจสอบว่า Vote ที่บันทึก เป็นของการเลือก Candidate คนที่ 1 จริงๆ
+        new_vote = Vote.objects.first()
+        self.assertEqual(new_vote.candidate, self.candidate)
+        
+        # คาดหวังว่าจะใช้เทมเพลต results.html
+        self.assertTemplateUsed(response, 'results.html')
+        
+        # คาดหวังข้อความ "เลือกตั้งสำเร็จ" ตามที่ Functional Test ระบุ
+        self.assertContains(response, 'เลือกตั้งสำเร็จ')
