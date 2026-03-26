@@ -24,9 +24,9 @@ class HomePageTest(TestCase):
 class VotePageTest(TestCase):
 
     def setUp(self):
-        # จำลองข้อมูลใน Database เพราะหน้าเว็บต้องดึง "ราชบุรี เขต 1" มาแสดง
         self.election = Election.objects.create(name='ราชบุรี เขต 1', date='2026-03-12')
-        Candidate.objects.create(name='ผู้สมัครคนที่ 1', election=self.election)
+        # เก็บใส่ self.candidate เอาไว้ใช้ตอนส่ง POST Request
+        self.candidate = Candidate.objects.create(name='ผู้สมัครคนที่ 1', election=self.election)
 
     def test_vote_url_resolves_to_vote_view(self):
         # เช็คว่า /vote/ วิ่งไปหาฟังก์ชัน vote
@@ -44,3 +44,17 @@ class VotePageTest(TestCase):
         self.assertContains(response, 'เลือก สส เขต')
         self.assertContains(response, 'ราชบุรี เขต 1')
         self.assertContains(response, 'เลือกผู้สมัคร')
+
+    def test_vote_post_renders_confirm_page(self):
+        # จำลองการส่งข้อมูลแบบ POST เหมือนการกดปุ่ม Submit ในหน้าเว็บ
+        # โดยส่ง id ของผู้สมัครคนที่ 1 ไป
+        response = self.client.post('/vote/', data={'candidate': self.candidate.id})
+        
+        # คาดหวังว่าจะมีการเรนเดอร์หน้า confirm.html
+        self.assertTemplateUsed(response, 'confirm.html')
+        
+        # คาดหวังข้อความยืนยันตามที่ Functional Test ระบุไว้เป๊ะๆ
+        self.assertContains(response, 'คุณได้เลือกผู้สมัครคนที่ 1 ในเขต ราชบุรี เขต 1')
+        
+        # คาดหวังว่าจะมีปุ่มยืนยันครั้งสุดท้าย (id_final_confirm_button)
+        self.assertContains(response, 'id_final_confirm_button')

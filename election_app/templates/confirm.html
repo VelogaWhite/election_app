@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}ยืนยันการเลือกตั้ง{% endblock %}
+
+{% block content %}
+    <h2>ยืนยันข้อมูลการเลือกตั้ง</h2>
+    
+    <p>คุณได้เลือก{{ candidate.name }} ในเขต {{ election.name }}</p>
+    
+    <form method="POST" action="{% url 'results' %}">
+        {% csrf_token %}
+        <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+        
+        <button type="submit" id="id_final_confirm_button" class="btn btn-primary">ยืนยัน</button>
+    </form>
+{% endblock %}
