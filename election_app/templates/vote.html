@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}เลือก สส เขต{% endblock %}
+
+{% block content %}
+    <h2>เลือก สส เขต</h2>
+    <p>เขตการเลือกตั้ง: {{ election.name }}</p>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <label for="id_candidate">เลือกผู้สมัคร</label>
+        
+        <select name="candidate" id="id_candidate" class="form-control">
+            {% for candidate in candidates %}
+                <option value="{{ candidate.id }}">{{ candidate.name }}</option>
+            {% endfor %}
+        </select>
+        
+        <br><br>
+        <button type="submit" id="id_confirm_button" class="btn btn-success">ยืนยันการเลือกตั้ง</button>
+    </form>
+{% endblock %}
