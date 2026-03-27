@@ -4,7 +4,7 @@
 
 Make sure you are on the ssid-auth branch to use this version of the system.
 
-```git clone https://github.com/VelogaWhite/VelogaWhite```
+```git clone https://github.com/VelogaWhite/election_app/tree/main```
 
 ```cd election_app```
 
