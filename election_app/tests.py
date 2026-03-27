@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import resolve
 from election_app.views import home, vote, results
 from election_app.models import Election, Candidate, Vote
+from election_app.setup_data import create_test_data
 
 class HomePageTest(TestCase):
 
@@ -23,10 +24,9 @@ class HomePageTest(TestCase):
 
 class VotePageTest(TestCase):
 
-    def setUp(self):
-        self.election = Election.objects.create(name='ราชบุรี เขต 1', date='2026-03-12')
-        # เก็บใส่ self.candidate เอาไว้ใช้ตอนส่ง POST Request
-        self.candidate = Candidate.objects.create(name='ผู้สมัครคนที่ 1', election=self.election)
+    @classmethod
+    def setUpTestData(cls):
+        cls.election, cls.candidate = create_test_data()
 
     def test_vote_url_resolves_to_vote_view(self):
         # เช็คว่า /vote/ วิ่งไปหาฟังก์ชัน vote
@@ -61,10 +61,9 @@ class VotePageTest(TestCase):
 
 class ResultsPageTest(TestCase):
 
-    def setUp(self):
-        # จำลองข้อมูลตั้งต้น
-        self.election = Election.objects.create(name='ราชบุรี เขต 1', date='2026-03-12')
-        self.candidate = Candidate.objects.create(name='ผู้สมัครคนที่ 1', election=self.election)
+    @classmethod
+    def setUpTestData(cls):
+        cls.election, cls.candidate = create_test_data()
 
     def test_results_url_resolves_to_results_view(self):
         # ตรวจสอบว่า url /results/ วิ่งไปที่ฟังก์ชัน results
@@ -85,5 +84,5 @@ class ResultsPageTest(TestCase):
         # คาดหวังว่าจะใช้เทมเพลต results.html
         self.assertTemplateUsed(response, 'results.html')
         
-        # คาดหวังข้อความ "เลือกตั้งสำเร็จ" ตามที่ Functional Test ระบุ
+        # คาดหวังข้อความ "เลือกตั้งสำเร็จ" ตามที่ Functional Test ระบุไว้เป๊ะๆ
         self.assertContains(response, 'เลือกตั้งสำเร็จ')

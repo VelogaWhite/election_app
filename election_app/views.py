@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from .models import Election, Candidate
+from .models import Election, Candidate, Vote
 
-# ฟังก์ชันหน้าแรกที่เราเพิ่งสร้างเพื่อตอบโจทย์เทสต์
 def home(request):
     return render(request, 'home.html')
 
@@ -30,4 +29,14 @@ def vote(request):
     return render(request, 'vote.html', context)
 
 def results(request):
-    pass
+    if request.method == 'POST':
+        candidate_id = request.POST.get('candidate_id')
+        selected_candidate = Candidate.objects.get(id=candidate_id)
+        
+        # บันทึกคะแนนเสียงลง Database
+        # (สมมติ voter_id เป็นไอดีจำลองไปก่อนสำหรับการทดสอบนี้)
+        Vote.objects.create(candidate=selected_candidate, voter_id='voter_12345')
+        
+        return render(request, 'results.html')
+
+    return render(request, 'results.html')

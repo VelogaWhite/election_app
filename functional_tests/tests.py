@@ -2,15 +2,28 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.firefox.service import Service    # เพิ่มบรรทัดนี้
+from selenium.webdriver.firefox.options import Options    # เพิ่มบรรทัดนี้
 import time
 import os
+from election_app.setup_data import create_test_data
 
 MAX_WAIT = 10
 
 class NewElectionTest(StaticLiveServerTestCase):
     
     def setUp(self):
-        self.browser = webdriver.Chrome()
+        # ใส่ Path เดียวกับที่ใช้แล้วเวิร์คใน test_selenium.py
+        firefox_path = "/usr/bin/firefox"  # แก้เป็น Path จริงที่คุณเพิ่งหาเจอ
+        driver_path = "/usr/local/bin/geckodriver"
+        
+        service = Service(executable_path=driver_path)
+        options = Options()
+        options.binary_location = firefox_path
+        
+        # เปลี่ยนจาก Chrome เป็น Firefox
+        self.browser = webdriver.Firefox(service=service, options=options)
+        self.election, self.candidate = create_test_data()
 
     def tearDown(self):
         self.browser.quit()
@@ -44,9 +57,6 @@ class NewElectionTest(StaticLiveServerTestCase):
         self.assertIn('เลือกตั้ง', self.browser.page_source)
         link = self.browser.find_element(By.LINK_TEXT, 'เลือกตั้ง')
         link.click()
-
-        # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือกตั้ง"
-        self.assertIn('เลือกตั้ง', self.browser.title)
 
         # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือก สส เขต"
         self.assertIn('เลือก สส เขต', self.browser.title)

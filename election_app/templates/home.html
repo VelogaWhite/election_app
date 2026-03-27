@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
+{% block title %}election_app{% endblock %}
+
 {% block content %}
     <div class="welcome-section">
         <h2>election_app</h2>
         <p>ยินดีต้อนรับสู่ระบบเลือกตั้งออนไลน์</p>
-        
         <a href="{% url 'vote' %}" class="btn btn-primary">เลือกตั้ง</a>
     </div>
 {% endblock %}
