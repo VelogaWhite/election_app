@@ -83,8 +83,8 @@ class NewElectionTest(StaticLiveServerTestCase):
         confirm_button = self.browser.find_element(By.ID, 'id_final_confirm_button')
         confirm_button.click()
 
-        # เมื่อกดยืนยันครั้งสุดท้ายแล้ว ระบบก็ได้แสดงหน้าว่า "เลือกตั้งสำเร็จ"
-        self.assertIn('เลือกตั้งสำเร็จ', self.browser.page_source)
+        # เมื่อกดยืนยันครั้งสุดท้ายแล้ว ระบบก็ได้แสดงหน้าว่า "บันทึกการลงคะแนนของคุณสำเร็จแล้ว!"
+        self.assertIn('บันทึกการลงคะแนนของคุณสำเร็จแล้ว!', self.browser.page_source)
 
         # สมชายก็ได้ปิดแอบลงไป
         self.logout()

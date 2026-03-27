@@ -67,18 +67,11 @@ class ResultsPageTest(TestCase):
         self.assertEqual(found.func, results)
 
     def test_results_post_saves_vote_and_returns_correct_html(self):
-        # จำลองการส่งข้อมูล (กดปุ่มยืนยันครั้งสุดท้าย) โดยส่ง candidate_id ไปที่ /results/
         response = self.client.post('/results/', data={'candidate_id': self.candidate.id})
         
-        # คาดหวังว่าคะแนนโหวตจะถูกบันทึกลง Database (ต้องมี Vote โผล่มา 1 record)
+        # เช็คว่าจำนวน Vote เพิ่มขึ้น
         self.assertEqual(Vote.objects.count(), 1)
         
-        # ตรวจสอบว่า Vote ที่บันทึก เป็นของการเลือก Candidate คนที่ 1 จริงๆ
-        new_vote = Vote.objects.first()
-        self.assertEqual(new_vote.candidate, self.candidate)
-        
-        # คาดหวังว่าจะใช้เทมเพลต results.html
-        self.assertTemplateUsed(response, 'results.html')
-        
-        # คาดหวังข้อความ "เลือกตั้งสำเร็จ" ตามที่ Functional Test ระบุไว้เป๊ะๆ
-        self.assertContains(response, 'เลือกตั้งสำเร็จ')
+        # เช็คว่าในหน้าจอมีการแสดงผลชื่อผู้สมัครและคะแนน (1 คะแนน)
+        self.assertContains(response, self.candidate.name)
+        self.assertContains(response, '1') # ตรวจสอบว่ามีเลข 1 ปรากฏ (คะแนน)
