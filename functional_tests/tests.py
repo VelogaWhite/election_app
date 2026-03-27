@@ -51,11 +51,11 @@ class NewElectionTest(StaticLiveServerTestCase):
         self.browser.get(self.live_server_url)
 
         # สมชายเห็นแอพชื่อว่า 'election_app' เปิดขึ้นมา
-        self.assertIn('election_app', self.browser.title)
+        self.assertIn('หน้าแรก - ระบบเลือกตั้ง', self.browser.title)
 
-        # สมชายเจอหน้าแรกที่มีหัวข้อต่างๆ สมชายเห็นหัวข้อ "เลือกตั้ง" และคลิกเข้าไป
-        self.assertIn('เลือกตั้ง', self.browser.page_source)
-        link = self.browser.find_element(By.LINK_TEXT, 'เลือกตั้ง')
+        # สมชายเห็นปุ่ม "เริ่มลงคะแนนเสียง" และคลิกเข้าไป
+        self.assertIn('เริ่มลงคะแนนเสียง', self.browser.page_source)
+        link = self.browser.find_element(By.LINK_TEXT, 'เริ่มลงคะแนนเสียง')
         link.click()
 
         # เมื่อเขากด Enter เขาจะถูกนำไปยังหน้าใหม่ที่มีหัวข้อว่า "เลือก สส เขต"
@@ -77,7 +77,9 @@ class NewElectionTest(StaticLiveServerTestCase):
         button.click()
 
         # เมื่อเขากด ยันยัน ระบบได้แสดงหน้าว่า สมชายได้เลือกผู้สมัครคนที่ 1 ในเขต "ราชบุรี เขต 1" แล้วมีให้กดยืนยันอีกครั้ง
-        self.assertIn('คุณได้เลือกผู้สมัครคนที่ 1 ในเขต ราชบุรี เขต 1', self.browser.page_source)
+        self.assertIn('ผู้สมัครคนที่ 1', self.browser.page_source)
+        self.assertIn('ราชบุรี เขต 1', self.browser.page_source)
+
         confirm_button = self.browser.find_element(By.ID, 'id_final_confirm_button')
         confirm_button.click()
 

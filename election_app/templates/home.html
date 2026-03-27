@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}election_app{% endblock %}
+{% block title %}หน้าแรก - ระบบเลือกตั้ง{% endblock %}
 
 {% block content %}
-    <div class="welcome-section">
-        <h2>election_app</h2>
-        <p>ยินดีต้อนรับสู่ระบบเลือกตั้งออนไลน์</p>
-        <a href="{% url 'vote' %}" class="btn btn-primary">เลือกตั้ง</a>
+    <div class="text-center bg-white rounded-2xl shadow-xl p-10 md:p-20 border border-gray-100">
+        <div class="mb-6 inline-block p-4 bg-blue-100 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <h2 class="text-4xl font-extrabold text-gray-800 mb-4">ยินดีต้อนรับสู่ election_app</h2>
+        <p class="text-lg text-gray-600 mb-8 max-w-lg mx-auto">ใช้สิทธิของคุณเพื่อสร้างการเปลี่ยนแปลง ระบบการเลือกตั้งออนไลน์ที่ใช้งานง่าย สะดวก และปลอดภัย</p>
+        <a href="{% url 'vote' %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-full transition duration-300 transform hover:scale-105 shadow-md">
+            เริ่มลงคะแนนเสียง
+        </a>
     </div>
 {% endblock %}

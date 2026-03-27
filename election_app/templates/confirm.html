@@ -3,14 +3,22 @@
 {% block title %}ยืนยันการเลือกตั้ง{% endblock %}
 
 {% block content %}
-    <h2>ยืนยันข้อมูลการเลือกตั้ง</h2>
-    
-    <p>คุณได้เลือก{{ candidate.name }} ในเขต {{ election.name }}</p>
-    
-    <form method="POST" action="{% url 'results' %}">
-        {% csrf_token %}
-        <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+    <div class="bg-white rounded-xl shadow-lg border-2 border-yellow-400 p-8 text-center max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">กรุณายืนยันข้อมูลอีกครั้ง</h2>
         
-        <button type="submit" id="id_final_confirm_button" class="btn btn-primary">ยืนยัน</button>
-    </form>
+        <div class="py-6 space-y-4 text-left bg-gray-50 rounded-lg px-6 mb-8">
+            <p class="text-lg"><span class="text-gray-500">คุณได้เลือก:</span> <span class="font-bold text-blue-700 text-xl">{{ candidate.name }}</span></p>
+            <p class="text-lg"><span class="text-gray-500">ในเขต:</span> <span class="font-bold text-gray-800">{{ election.name }}</span></p>
+        </div>
+        
+        <form method="POST" action="{% url 'results' %}" class="flex flex-col md:flex-row justify-center gap-4">
+            {% csrf_token %}
+            <input type="hidden" name="candidate_id" value="{{ candidate.id }}">
+            
+            <a href="{% url 'vote' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg transition">ย้อนกลับ</a>
+            <button type="submit" id="id_final_confirm_button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-12 rounded-lg transition shadow-md">
+                ยืนยันลงคะแนน
+            </button>
+        </form>
+    </div>
 {% endblock %}

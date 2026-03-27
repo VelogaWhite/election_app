@@ -46,17 +46,13 @@ class VotePageTest(TestCase):
         self.assertContains(response, 'เลือกผู้สมัคร')
 
     def test_vote_post_renders_confirm_page(self):
-        # จำลองการส่งข้อมูลแบบ POST เหมือนการกดปุ่ม Submit ในหน้าเว็บ
-        # โดยส่ง id ของผู้สมัครคนที่ 1 ไป
         response = self.client.post('/vote/', data={'candidate': self.candidate.id})
-        
-        # คาดหวังว่าจะมีการเรนเดอร์หน้า confirm.html
         self.assertTemplateUsed(response, 'confirm.html')
         
-        # คาดหวังข้อความยืนยันตามที่ Functional Test ระบุไว้เป๊ะๆ
-        self.assertContains(response, 'คุณได้เลือกผู้สมัครคนที่ 1 ในเขต ราชบุรี เขต 1')
+        # ตรวจสอบว่ามีชื่อผู้สมัครและชื่อเขตปรากฏอยู่ในหน้าเว็บ
+        self.assertContains(response, 'ผู้สมัครคนที่ 1')
+        self.assertContains(response, 'ราชบุรี เขต 1')
         
-        # คาดหวังว่าจะมีปุ่มยืนยันครั้งสุดท้าย (id_final_confirm_button)
         self.assertContains(response, 'id_final_confirm_button')
 
 class ResultsPageTest(TestCase):
